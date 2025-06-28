@@ -13,26 +13,40 @@ Ce template génère des opérations CRUD complètes avec tables TanStack Table,
 - **Export/Import** : Données CSV avec validation
 - **TypeScript** : Types générés automatiquement
 
-## 📦 Structure générée
+## 📦 Structure du template
+
+```
+templates/crud/
+├── index.ts                      # Point d'entrée et exports
+├── generator.ts                  # Générateur principal
+├── types.ts                      # Génération des types TypeScript
+├── schemas.ts                    # Génération des schémas Zod
+├── utilities.ts                  # Génération des utilitaires
+├── example.ts                    # Exemples d'utilisation
+├── test.ts                       # Suite de tests
+└── README.md                     # Documentation
+```
+
+## 📁 Fichiers générés
 
 ```
 src/
 ├── components/{entity}/
-│   ├── {entity}-table.tsx        # Table principale avec TanStack
-│   ├── {entity}-form.tsx         # Formulaires CRUD
-│   └── {entity}-actions.tsx      # Composants d'actions
+│   └── {entity}-table.tsx        # Table principale avec TanStack
 ├── services/{entity}/
-│   ├── actions.ts                # Server Actions CRUD
-│   ├── search-actions.ts         # Actions de recherche
-│   ├── bulk-actions.ts           # Actions en lot
-│   └── data-actions.ts           # Export/Import
-├── hooks/{entity}/
-│   ├── use-{entity}-table.ts     # Hook de table
-│   ├── use-{entity}-form.ts      # Hook de formulaire
-│   └── use-{entity}-actions.ts   # Hook d'actions
+│   └── actions.ts                # Server Actions CRUD
+├── lib/
+│   ├── {entity}-utils.ts         # Utilitaires métier
+│   ├── {entity}-formatters.ts    # Formatters d'affichage
+│   └── {entity}-validators.ts    # Validateurs métier
 shared/
-├── types/{entity}.ts             # Types TypeScript
-└── validation/{entity}.ts        # Schémas Zod
+├── types/
+│   ├── {entity}.ts               # Types principaux
+│   ├── {entity}-actions.ts       # Types d'actions
+│   └── {entity}-hooks.ts         # Types de hooks
+└── validation/
+    ├── {entity}.ts               # Schémas principaux
+    └── {entity}-filters.ts       # Schémas de filtres
 ```
 
 ## 🛠️ Utilisation

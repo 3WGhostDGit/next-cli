@@ -13,37 +13,53 @@ Ce template génère une navigation complète avec layouts App Router, menus, br
 - **Thème switcher** : Support dark/light mode
 - **TypeScript** : Types complets pour la navigation
 
-## 📦 Structure générée
+## 📦 Structure du template
+
+```
+templates/navigation/
+├── index.ts                      # Point d'entrée et exports
+├── generator.ts                  # Générateur principal
+├── types.ts                      # Génération des types TypeScript
+├── schemas.ts                    # Génération des schémas Zod
+├── utilities.ts                  # Génération des utilitaires
+├── example.ts                    # Exemples d'utilisation
+├── test.ts                       # Suite de tests
+└── README.md                     # Documentation
+```
+
+## 📁 Fichiers générés
 
 ```
 app/
 ├── layout.tsx                    # Layout racine
 ├── (dashboard)/layout.tsx        # Layout dashboard
-├── (admin)/layout.tsx           # Layout admin
-├── loading.tsx                  # Page de chargement
-├── error.tsx                    # Page d'erreur
+├── (main)/layout.tsx            # Layout header
+├── (app)/layout.tsx             # Layout hybride
 ├── not-found.tsx               # Page 404
-└── unauthorized/page.tsx       # Page non autorisé
+└── error.tsx                   # Page d'erreur
 src/
 ├── components/navigation/
 │   ├── app-sidebar.tsx         # Sidebar principale
-│   ├── admin-sidebar.tsx       # Sidebar admin
 │   ├── header.tsx              # Header avec navigation
 │   ├── breadcrumbs.tsx         # Breadcrumbs dynamiques
 │   ├── mobile-menu.tsx         # Menu mobile
-│   ├── command-palette.tsx     # Palette de commandes
-│   ├── user-menu.tsx           # Menu utilisateur
-│   └── theme-switcher.tsx      # Sélecteur de thème
+│   └── command-palette.tsx     # Palette de commandes
 ├── hooks/navigation/
-│   ├── use-navigation.ts       # Hook de navigation
-│   ├── use-breadcrumbs.ts      # Hook breadcrumbs
-│   └── use-permissions.ts      # Hook permissions
+│   └── use-navigation.ts       # Hook de navigation
 ├── lib/
-│   ├── permissions.ts          # Gestion des permissions
-│   └── navigation.ts           # Utilitaires navigation
+│   ├── navigation-utils.ts     # Utilitaires navigation
+│   ├── navigation-permissions.ts # Utilitaires permissions
+│   └── navigation-formatters.ts # Formatters d'affichage
 middleware.ts                   # Middleware de sécurité
 shared/
-└── types/navigation.ts         # Types de navigation
+├── types/
+│   ├── navigation.ts           # Types principaux
+│   ├── navigation-permissions.ts # Types permissions
+│   └── navigation-hooks.ts     # Types de hooks
+└── validation/
+    ├── navigation.ts           # Schémas principaux
+    ├── navigation-permissions.ts # Schémas permissions
+    └── navigation-actions.ts   # Schémas d'actions
 ```
 
 ## 🛠️ Utilisation
