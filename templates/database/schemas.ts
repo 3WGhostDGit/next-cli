@@ -80,8 +80,12 @@ generator zod {
 function generateDatasource(config: DatabaseConfig): string {
   return `datasource db {
   provider = "${config.database}"
-  url      = env("DATABASE_URL")${config.features.includes("multi-schema") ? `
-  schemas  = ["public", "auth", "analytics"]` : ""}
+  url      = env("DATABASE_URL")${
+    config.features.includes("multi-schema")
+      ? `
+  schemas  = ["public", "auth", "analytics"]`
+      : ""
+  }
 }`;
 }
 
@@ -156,26 +160,58 @@ function generateUserModel(config: DatabaseConfig): string {
 
 model User {
   ${getIdField(config)}
-  ${zodValidation ? '/// @zod.string.email({ message: "Email invalide" })' : ''}
+  ${zodValidation ? '/// @zod.string.email({ message: "Email invalide" })' : ""}
   email     String   @unique
-  ${zodValidation ? '/// @zod.string.min(2, { message: "Le nom doit contenir au moins 2 caractères" }).max(50, { message: "Le nom ne peut pas dépasser 50 caractères" })' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.string.min(2, { message: "Le nom doit contenir au moins 2 caractères" }).max(50, { message: "Le nom ne peut pas dépasser 50 caractères" })'
+      : ""
+  }
   name      String?
-  ${zodValidation ? '/// @zod.string.url({ message: "URL d\'image invalide" }).optional()' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.string.url({ message: "URL d\'image invalide" }).optional()'
+      : ""
+  }
   image     String?
   role      Role     @default(USER)
   status    Status   @default(ACTIVE)
-  ${zodValidation ? '/// @zod.date({ invalid_type_error: "Date invalide" })' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.date({ invalid_type_error: "Date invalide" })'
+      : ""
+  }
   createdAt DateTime @default(now())
-  ${zodValidation ? '/// @zod.date({ invalid_type_error: "Date invalide" })' : ''}
-  updatedAt DateTime @updatedAt${softDelete ? `
-  deletedAt DateTime?` : ""}${auditTrail ? `
+  ${
+    zodValidation
+      ? '/// @zod.date({ invalid_type_error: "Date invalide" })'
+      : ""
+  }
+  updatedAt DateTime @updatedAt${
+    softDelete
+      ? `
+  deletedAt DateTime?`
+      : ""
+  }${
+    auditTrail
+      ? `
   createdBy String?
-  updatedBy String?` : ""}
+  updatedBy String?`
+      : ""
+  }
 
   // Relations
-  sessions  Session[]${config.models.post ? `
-  posts     Post[]` : ""}${config.models.profile ? `
-  profile   Profile?` : ""}
+  sessions  Session[]${
+    config.models.post
+      ? `
+  posts     Post[]`
+      : ""
+  }${
+    config.models.profile
+      ? `
+  profile   Profile?`
+      : ""
+  }
 
   @@map("users")
 }`;
@@ -191,11 +227,23 @@ function generateSessionModel(config: DatabaseConfig): string {
 
 model Session {
   ${getIdField(config)}
-  ${zodValidation ? '/// @zod.string.cuid({ message: "ID utilisateur invalide" })' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.string.cuid({ message: "ID utilisateur invalide" })'
+      : ""
+  }
   userId    String
-  ${zodValidation ? '/// @zod.date.min(new Date(), { message: "La session ne peut pas expirer dans le passé" })' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.date.min(new Date(), { message: "La session ne peut pas expirer dans le passé" })'
+      : ""
+  }
   expiresAt DateTime
-  ${zodValidation ? '/// @zod.date({ invalid_type_error: "Date invalide" })' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.date({ invalid_type_error: "Date invalide" })'
+      : ""
+  }
   createdAt DateTime @default(now())
 
   // Relations
@@ -216,19 +264,43 @@ function generatePostModel(config: DatabaseConfig): string {
 
 model Post {
   ${getIdField(config)}
-  ${zodValidation ? '/// @zod.string.min(1, { message: "Le titre est requis" }).max(255, { message: "Le titre ne peut pas dépasser 255 caractères" })' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.string.min(1, { message: "Le titre est requis" }).max(255, { message: "Le titre ne peut pas dépasser 255 caractères" })'
+      : ""
+  }
   title     String   @db.VarChar(255)
-  ${zodValidation ? '/// @zod.string.optional()' : ''}
+  ${zodValidation ? "/// @zod.string.optional()" : ""}
   content   String?
-  ${zodValidation ? '/// @zod.string.url({ message: "URL d\'image invalide" }).optional()' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.string.url({ message: "URL d\'image invalide" }).optional()'
+      : ""
+  }
   image     String?
   published Boolean  @default(false)
-  ${zodValidation ? '/// @zod.date({ invalid_type_error: "Date invalide" })' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.date({ invalid_type_error: "Date invalide" })'
+      : ""
+  }
   createdAt DateTime @default(now())
-  ${zodValidation ? '/// @zod.date({ invalid_type_error: "Date invalide" })' : ''}
-  updatedAt DateTime @updatedAt${softDelete ? `
-  deletedAt DateTime?` : ""}
-  ${zodValidation ? '/// @zod.string.cuid({ message: "ID auteur invalide" })' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.date({ invalid_type_error: "Date invalide" })'
+      : ""
+  }
+  updatedAt DateTime @updatedAt${
+    softDelete
+      ? `
+  deletedAt DateTime?`
+      : ""
+  }
+  ${
+    zodValidation
+      ? '/// @zod.string.cuid({ message: "ID auteur invalide" })'
+      : ""
+  }
   authorId  String
 
   // Relations
@@ -248,17 +320,41 @@ function generateProfileModel(config: DatabaseConfig): string {
 
 model Profile {
   ${getIdField(config)}
-  ${zodValidation ? '/// @zod.string.max(500, { message: "La bio ne peut pas dépasser 500 caractères" }).optional()' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.string.max(500, { message: "La bio ne peut pas dépasser 500 caractères" }).optional()'
+      : ""
+  }
   bio       String?
-  ${zodValidation ? '/// @zod.string.url({ message: "URL de site web invalide" }).optional()' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.string.url({ message: "URL de site web invalide" }).optional()'
+      : ""
+  }
   website   String?
-  ${zodValidation ? '/// @zod.string.max(100, { message: "La localisation ne peut pas dépasser 100 caractères" }).optional()' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.string.max(100, { message: "La localisation ne peut pas dépasser 100 caractères" }).optional()'
+      : ""
+  }
   location  String?
-  ${zodValidation ? '/// @zod.date({ invalid_type_error: "Date invalide" })' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.date({ invalid_type_error: "Date invalide" })'
+      : ""
+  }
   createdAt DateTime @default(now())
-  ${zodValidation ? '/// @zod.date({ invalid_type_error: "Date invalide" })' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.date({ invalid_type_error: "Date invalide" })'
+      : ""
+  }
   updatedAt DateTime @updatedAt
-  ${zodValidation ? '/// @zod.string.cuid({ message: "ID utilisateur invalide" })' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.string.cuid({ message: "ID utilisateur invalide" })'
+      : ""
+  }
   userId    String   @unique
 
   // Relations
@@ -271,20 +367,35 @@ model Profile {
 /**
  * Génère un modèle personnalisé
  */
-function generateCustomModel(modelName: string, config: DatabaseConfig): string {
+function generateCustomModel(
+  modelName: string,
+  config: DatabaseConfig
+): string {
   const zodValidation = config.validation.useZodPrismaTypes;
 
   return `
 
 model ${modelName} {
   ${getIdField(config)}
-  ${zodValidation ? '/// @zod.string.min(1, { message: "Le nom est requis" })' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.string.min(1, { message: "Le nom est requis" })'
+      : ""
+  }
   name      String
-  ${zodValidation ? '/// @zod.string.optional()' : ''}
+  ${zodValidation ? "/// @zod.string.optional()" : ""}
   description String?
-  ${zodValidation ? '/// @zod.date({ invalid_type_error: "Date invalide" })' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.date({ invalid_type_error: "Date invalide" })'
+      : ""
+  }
   createdAt DateTime @default(now())
-  ${zodValidation ? '/// @zod.date({ invalid_type_error: "Date invalide" })' : ''}
+  ${
+    zodValidation
+      ? '/// @zod.date({ invalid_type_error: "Date invalide" })'
+      : ""
+  }
   updatedAt DateTime @updatedAt
 
   @@map("${modelName.toLowerCase()}s")
@@ -303,7 +414,7 @@ function getIdField(config: DatabaseConfig): string {
       return "id Int @id @default(autoincrement())";
     case "postgresql":
     default:
-      return 'id String @id @default(cuid())';
+      return "id String @id @default(cuid())";
   }
 }
 
@@ -412,3 +523,4 @@ async function createPosts() {
 
   console.log('📝 Posts created');
 }`;
+}
