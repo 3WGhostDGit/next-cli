@@ -1,0 +1,38 @@
+packages:
+  - '.'
+  - 'templates/*'
+  - 'examples/*'
+
+# Shared dependencies across workspace
+shared-workspace-lockfile: true
+
+# Hoist common dependencies to root
+hoist-pattern:
+  - '*eslint*'
+  - '*prettier*'
+  - '*typescript*'
+  - '*vitest*'
+  - '@types/*'
+
+# Prevent hoisting of these packages
+public-hoist-pattern:
+  - '*'
+
+# Workspace configuration
+workspace:
+  # Link workspace packages
+  link-workspace-packages: true
+  
+  # Prefer workspace packages
+  prefer-workspace-packages: true
+
+# Package resolution
+resolution-mode: 'highest'
+
+# Registry configuration
+registry: 'https://registry.npmjs.org/'
+
+# Node.js version requirement
+engines:
+  node: '>=18.0.0'
+  pnpm: '>=8.0.0'
